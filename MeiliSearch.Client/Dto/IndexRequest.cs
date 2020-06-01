@@ -1,4 +1,4 @@
-﻿namespace MeiliSearch
+﻿namespace MeiliSearch.Dto
 {
     public class IndexRequest
     {

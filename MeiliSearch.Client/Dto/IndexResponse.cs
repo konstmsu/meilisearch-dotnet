@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MeiliSearch
+namespace MeiliSearch.Dto
 {
     public class IndexResponse
     {

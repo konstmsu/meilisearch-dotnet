@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MeiliSearch.Dto;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MeiliSearch

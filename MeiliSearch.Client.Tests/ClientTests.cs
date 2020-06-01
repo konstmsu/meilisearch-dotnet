@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
+using MeiliSearch.Dto;
 using Xunit;
 using static MeiliSearch.TestUtils;
 

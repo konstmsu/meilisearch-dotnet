@@ -9,6 +9,5 @@ namespace MeiliSearch
             foreach (var index in await client.ListIndexes())
                 await client.DeleteIndex(index.uid);
         }
-
     }
 }
