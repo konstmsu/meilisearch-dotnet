@@ -2,13 +2,13 @@
 {
     public class Config
     {
-        public readonly string host;
-        public readonly string? apiKey;
-
         public Config(string host, string? apiKey = null)
         {
-            this.host = host;
-            this.apiKey = apiKey;
+            Host = host;
+            ApiKey = apiKey;
         }
+
+        public string Host { get; }
+        public string? ApiKey { get; }
     }
 }

@@ -1,10 +1,10 @@
-﻿using MeiliSearch.Dto;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace MeiliSearch
+﻿namespace MeiliSearch
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using MeiliSearch.Dto;
+
     public class Client
     {
         readonly RawClient client;

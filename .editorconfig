@@ -7,3 +7,12 @@ guidelines = 120
 
 [*.cs]
 dotnet_diagnostic.CA1051.severity = none
+dotnet_diagnostic.SA1600.severity = none
+dotnet_diagnostic.SA1400.severity = none
+dotnet_diagnostic.SA1101.severity = none
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.SA1515.severity = none
+dotnet_diagnostic.SA1202.severity = none
+dotnet_diagnostic.SA1503.severity = none
+dotnet_diagnostic.SA1300.severity = none
+dotnet_diagnostic.SA1516.severity = none

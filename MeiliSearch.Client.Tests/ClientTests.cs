@@ -1,21 +1,21 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentAssertions;
-using FluentAssertions.Equivalency;
-using MeiliSearch.Dto;
-using Xunit;
-using static MeiliSearch.TestUtils;
-
 namespace MeiliSearch
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using FluentAssertions;
+    using FluentAssertions.Equivalency;
+    using MeiliSearch.Dto;
+    using Xunit;
+    using static MeiliSearch.TestUtils;
+
     public class ClientTests
     {
-        CreateIndexRequest uidNoPrimaryKey = new CreateIndexRequest { uid = "movies_test" };
-        CreateIndexRequest uidAndPrimaryKey = new CreateIndexRequest
+        readonly CreateIndexRequest uidNoPrimaryKey = new CreateIndexRequest { uid = "movies_test" };
+        readonly CreateIndexRequest uidAndPrimaryKey = new CreateIndexRequest
         {
             uid = "movies_test2",
-            primaryKey = "id"
+            primaryKey = "id",
         };
 
         static Client CreateClient()
@@ -39,7 +39,7 @@ namespace MeiliSearch
         [Fact]
         public Task ListIndexes_NoPrimaryKey() => RunInClean(async client =>
         {
-            var request = uidNoPrimaryKey;
+            var request = this.uidNoPrimaryKey;
 
             var createResponse = await client.CreateIndexAsync(request);
             createResponse.uid.Should().Be(request.uid);

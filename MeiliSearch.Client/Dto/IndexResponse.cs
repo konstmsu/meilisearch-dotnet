@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace MeiliSearch.Dto
+﻿namespace MeiliSearch.Dto
 {
+    using System;
+
     public class IndexResponse
     {
         public string uid { get; set; }

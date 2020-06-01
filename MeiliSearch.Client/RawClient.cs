@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MeiliSearch.Dto;
-using RestSharp;
-
-namespace MeiliSearch
+﻿namespace MeiliSearch
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using MeiliSearch.Dto;
+    using RestSharp;
+
     public class RawClient
     {
         readonly RestClient rest;
@@ -14,7 +14,7 @@ namespace MeiliSearch
         public RawClient(Config config)
         {
             this.config = config;
-            this.rest = new RestClient(config.host);
+            this.rest = new RestClient(config.Host);
         }
 
         public Task<List<IndexResponse>> ListIndexesAsync() =>
