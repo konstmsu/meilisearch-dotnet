@@ -11,8 +11,8 @@ namespace MeiliSearch
 {
     public class ClientTests
     {
-        IndexRequest uidNoPrimaryKey = new IndexRequest { uid = "movies_test" };
-        IndexRequest uidAndPrimaryKey = new IndexRequest
+        CreateIndexRequest uidNoPrimaryKey = new CreateIndexRequest { uid = "movies_test" };
+        CreateIndexRequest uidAndPrimaryKey = new CreateIndexRequest
         {
             uid = "movies_test2",
             primaryKey = "id"
@@ -44,18 +44,48 @@ namespace MeiliSearch
             var createResponse = await client.CreateIndex(request);
             createResponse.uid.Should().Be(request.uid);
 
-            var shown = await client.GetIndex(request.uid);
+            var index = await client.GetIndex(request.uid);
 
-            shown.Should().BeEquivalentTo(new IndexResponse { uid = request.uid, name = request.uid, createdAt = DateTimeOffset.Now, updatedAt = DateTimeOffset.Now }, Tolerant);
-
-            shown.uid.Should().Be(request.uid);
-            shown.name.Should().Be(request.uid);
-            shown.primaryKey.Should().Be(null);
-            shown.createdAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
-            shown.updatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
+            index.uid.Should().Be(request.uid);
+            index.name.Should().Be(request.uid);
+            index.primaryKey.Should().Be(null);
+            index.createdAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
+            index.updatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
         });
 
-        static EquivalencyAssertionOptions<TEx> Tolerant<TEx>(EquivalencyAssertionOptions<TEx> options) =>
-            options.Using<DateTimeOffset>(context => context.Subject.Should().BeCloseTo(context.Expectation, TimeSpan.FromSeconds(1))).WhenTypeIs<DateTimeOffset>();
+        [Fact]
+        public Task CreateIndexWithPrimaryKey() => RunInClean(async client =>
+        {
+            var request = uidAndPrimaryKey;
+            var response = await client.CreateIndex(request);
+            var index = await client.GetIndex(request.uid);
+            index.uid.Should().Be(request.uid);
+            index.name.Should().Be(request.uid);
+            index.primaryKey.Should().NotBeNullOrWhiteSpace();
+            index.createdAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
+            index.updatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
+        });
+
+        [Fact]
+        public Task ListIndexesNotEmpty() => RunInClean(async client =>
+        {
+            var requests = new[] { uidAndPrimaryKey, uidNoPrimaryKey };
+            var tasks = requests.Select(r => client.CreateIndex(r)).ToList();
+            var expected = await Task.WhenAll(tasks);
+            var actual = await client.ListIndexes();
+            actual.Select(a => a.uid).Should().BeEquivalentTo(tasks.Select(t => t.Result.uid));
+        });
+
+        [Fact]
+        public Task UpdateSetPrimaryKey() => RunInClean(async client =>
+        {
+            var request = uidNoPrimaryKey;
+            var index = await client.CreateIndex(request);
+            // TODO uid is in request. Maybe it shouldn't?
+            var updated = await client.UpdateIndex(request.uid, new UpdateIndexRequest { primaryKey = "newPrimaryKey" });
+            var actual = await client.GetIndex(request.uid);
+            actual.uid.Should().Be(index.uid);
+            actual.primaryKey.Should().Be("newPrimaryKey");
+        });
     }
 }
