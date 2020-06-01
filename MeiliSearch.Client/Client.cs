@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using RestSharp;
 
@@ -45,58 +43,30 @@ namespace MeiliSearch
             this.rest = new RestClient(config.host);
         }
 
-        public async Task<List<IndexResponse>> ListIndexes()
-        {
-            var request = new RestRequest("/indexes", DataFormat.Json);
-            var response = await rest.GetAsync<List<IndexResponse>>(request);
-            return response;
-        }
+        public Task<List<IndexResponse>> ListIndexes() =>
+            rest.GetAsync<List<IndexResponse>>(new RestRequest("/indexes", DataFormat.Json));
 
-        public async Task<List<IndexResponse>> CreateIndex(IndexRequest data)
-        {
-            var request = new RestRequest("/indexes", DataFormat.Json).AddJsonBody(data);
-            var response = await rest.PostAsync<List<IndexResponse>>(request);
-            return response;
-        }
+        public Task<List<IndexResponse>> CreateIndex(IndexRequest data) =>
+            rest.PostAsync<List<IndexResponse>>(new RestRequest("/indexes", DataFormat.Json).AddJsonBody(data));
 
-        public async Task<IndexResponse> GetIndex(string uid)
-        {
-            var request = new RestRequest($"/indexes/{uid}");
-            var response = await rest.GetAsync<IndexResponse>(request);
-            return response;
-        }
+        public Task<IndexResponse> GetIndex(string uid) =>
+            rest.GetAsync<IndexResponse>(new RestRequest($"/indexes/{uid}"));
 
-        public async Task DeleteIndex(string uid)
-        {
-            var request = new RestRequest($"/indexes/{uid}");
-            await rest.DeleteAsync<string>(request);
-        }
+        public Task DeleteIndex(string uid) =>
+            rest.DeleteAsync<string>(new RestRequest($"/indexes/{uid}"));
     }
 
     public class Client2
     {
         readonly RawClient2 client;
 
-        public Client2(RawClient2 client)
-        {
-            this.client = client;
-        }
+        public Client2(RawClient2 client) => this.client = client;
 
-        public Task DeleteIndex(string uid)
-        {
-            return client.DeleteIndex(uid);
-        }
+        public Task DeleteIndex(string uid) => client.DeleteIndex(uid);
 
-        public Task<List<IndexResponse>> ListIndexes()
-        {
-            return client.ListIndexes();
-        }
+        public Task<List<IndexResponse>> ListIndexes() => client.ListIndexes();
 
-        public async Task<List<IndexResponse>> CreateIndex(IndexRequest data)
-        {
-            var result = await client.CreateIndex(data);
-            return result;
-        }
+        public Task<List<IndexResponse>> CreateIndex(IndexRequest data) => client.CreateIndex(data);
 
         public Task<IndexResponse> GetIndex(string uid) => client.GetIndex(uid);
     }
