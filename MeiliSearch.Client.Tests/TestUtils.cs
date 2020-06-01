@@ -7,8 +7,8 @@ namespace MeiliSearch
     {
         public static async Task DeleteAllIndexesAsync(Client client)
         {
-            foreach (var index in await client.ListIndexes())
-                await client.DeleteIndex(index.uid);
+            foreach (var index in await client.ListIndexesAsync().ConfigureAwait(false))
+                await client.DeleteIndexAsync(index.uid).ConfigureAwait(false);
         }
 
         public static readonly TimeSpan TolerableTimeDifference = TimeSpan.FromSeconds(2);

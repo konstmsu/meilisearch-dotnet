@@ -4,3 +4,6 @@ root = true
 end_of_line = lf
 insert_final_newline = true
 guidelines = 120
+
+[*.cs]
+dotnet_diagnostic.CA1051.severity = none

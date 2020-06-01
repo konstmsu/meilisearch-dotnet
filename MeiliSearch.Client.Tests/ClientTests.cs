@@ -33,7 +33,7 @@ namespace MeiliSearch
         [Fact]
         public Task ListIndexes_Empty() => RunInClean(async client =>
         {
-            (await client.ListIndexes()).Should().BeEmpty();
+            (await client.ListIndexesAsync()).Should().BeEmpty();
         });
 
         [Fact]
@@ -41,10 +41,10 @@ namespace MeiliSearch
         {
             var request = uidNoPrimaryKey;
 
-            var createResponse = await client.CreateIndex(request);
+            var createResponse = await client.CreateIndexAsync(request);
             createResponse.uid.Should().Be(request.uid);
 
-            var index = await client.GetIndex(request.uid);
+            var index = await client.GetIndexAsync(request.uid);
 
             index.uid.Should().Be(request.uid);
             index.name.Should().Be(request.uid);
@@ -57,8 +57,8 @@ namespace MeiliSearch
         public Task CreateIndexWithPrimaryKey() => RunInClean(async client =>
         {
             var request = uidAndPrimaryKey;
-            var response = await client.CreateIndex(request);
-            var index = await client.GetIndex(request.uid);
+            var response = await client.CreateIndexAsync(request);
+            var index = await client.GetIndexAsync(request.uid);
             index.uid.Should().Be(request.uid);
             index.name.Should().Be(request.uid);
             index.primaryKey.Should().NotBeNullOrWhiteSpace();
@@ -70,9 +70,9 @@ namespace MeiliSearch
         public Task ListIndexesNotEmpty() => RunInClean(async client =>
         {
             var requests = new[] { uidAndPrimaryKey, uidNoPrimaryKey };
-            var tasks = requests.Select(r => client.CreateIndex(r)).ToList();
+            var tasks = requests.Select(r => client.CreateIndexAsync(r)).ToList();
             var expected = await Task.WhenAll(tasks);
-            var actual = await client.ListIndexes();
+            var actual = await client.ListIndexesAsync();
             actual.Select(a => a.uid).Should().BeEquivalentTo(tasks.Select(t => t.Result.uid));
         });
 
@@ -80,10 +80,10 @@ namespace MeiliSearch
         public Task UpdateSetPrimaryKey() => RunInClean(async client =>
         {
             var request = uidNoPrimaryKey;
-            var index = await client.CreateIndex(request);
+            var index = await client.CreateIndexAsync(request);
             // TODO uid is in request. Maybe it shouldn't?
-            var updated = await client.UpdateIndex(request.uid, new UpdateIndexRequest { primaryKey = "newPrimaryKey" });
-            var actual = await client.GetIndex(request.uid);
+            var updated = await client.UpdateIndexAsync(request.uid, new UpdateIndexRequest { primaryKey = "newPrimaryKey" });
+            var actual = await client.GetIndexAsync(request.uid);
             actual.uid.Should().Be(index.uid);
             actual.primaryKey.Should().Be("newPrimaryKey");
         });

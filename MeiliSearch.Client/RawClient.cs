@@ -23,7 +23,8 @@ namespace MeiliSearch
         public async Task<IndexResponse> CreateIndexAsync(CreateIndexRequest data)
         {
             var response = await rest.PostAsync<List<IndexResponse>>(
-                new RestRequest("/indexes", DataFormat.Json).AddJsonBody(data));
+                new RestRequest("/indexes", DataFormat.Json).AddJsonBody(data))
+                .ConfigureAwait(false);
             return response.Single();
         }
 

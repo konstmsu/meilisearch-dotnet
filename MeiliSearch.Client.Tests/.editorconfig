@@ -1,2 +1,4 @@
 [*Tests.cs]
 dotnet_diagnostic.VSTHRD200.severity = none
+dotnet_diagnostic.CA2007.severity = none
+dotnet_diagnostic.CA1707.severity = none

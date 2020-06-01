@@ -11,14 +11,14 @@ namespace MeiliSearch
 
         public Client(RawClient client) => this.client = client;
 
-        public Task DeleteIndex(string uid) => client.DeleteIndexAsync(uid);
+        public Task DeleteIndexAsync(string uid) => client.DeleteIndexAsync(uid);
 
-        public Task<List<IndexResponse>> ListIndexes() => client.ListIndexesAsync();
+        public Task<List<IndexResponse>> ListIndexesAsync() => client.ListIndexesAsync();
 
-        public Task<IndexResponse> CreateIndex(CreateIndexRequest data) => client.CreateIndexAsync(data);
+        public Task<IndexResponse> CreateIndexAsync(CreateIndexRequest data) => client.CreateIndexAsync(data);
 
-        public Task<IndexResponse> GetIndex(string uid) => client.GetIndexAsync(uid);
+        public Task<IndexResponse> GetIndexAsync(string uid) => client.GetIndexAsync(uid);
 
-        public Task<IndexResponse> UpdateIndex(string uid, UpdateIndexRequest updateRequest) => client.UpdateIndexAsync(uid, updateRequest);
+        public Task<IndexResponse> UpdateIndexAsync(string uid, UpdateIndexRequest updateRequest) => client.UpdateIndexAsync(uid, updateRequest);
     }
 }
