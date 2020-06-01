@@ -26,7 +26,7 @@ namespace MeiliSearch
         static async Task RunInClean(Func<Client, Task> action)
         {
             var client = CreateClient();
-            await DeleteAllIndexes(client);
+            await DeleteAllIndexesAsync(client);
             await action(client);
         }
 

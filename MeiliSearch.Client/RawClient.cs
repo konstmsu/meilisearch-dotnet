@@ -17,24 +17,24 @@ namespace MeiliSearch
             this.rest = new RestClient(config.host);
         }
 
-        public Task<List<IndexResponse>> ListIndexes() =>
+        public Task<List<IndexResponse>> ListIndexesAsync() =>
             rest.GetAsync<List<IndexResponse>>(new RestRequest("/indexes", DataFormat.Json));
 
-        public async Task<IndexResponse> CreateIndex(CreateIndexRequest data)
+        public async Task<IndexResponse> CreateIndexAsync(CreateIndexRequest data)
         {
             var response = await rest.PostAsync<List<IndexResponse>>(
                 new RestRequest("/indexes", DataFormat.Json).AddJsonBody(data));
             return response.Single();
         }
 
-        public Task<IndexResponse> UpdateIndex(string uid, UpdateIndexRequest updateRequest) =>
+        public Task<IndexResponse> UpdateIndexAsync(string uid, UpdateIndexRequest updateRequest) =>
             rest.PutAsync<IndexResponse>(
                 new RestRequest($"/indexes/{uid}").AddJsonBody(updateRequest));
 
-        public Task<IndexResponse> GetIndex(string uid) =>
+        public Task<IndexResponse> GetIndexAsync(string uid) =>
             rest.GetAsync<IndexResponse>(new RestRequest($"/indexes/{uid}"));
 
-        public Task DeleteIndex(string uid) =>
+        public Task DeleteIndexAsync(string uid) =>
             rest.DeleteAsync<string>(new RestRequest($"/indexes/{uid}"));
     }
 }
