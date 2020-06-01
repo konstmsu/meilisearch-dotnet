@@ -49,8 +49,8 @@ namespace MeiliSearch
             index.uid.Should().Be(request.uid);
             index.name.Should().Be(request.uid);
             index.primaryKey.Should().Be(null);
-            index.createdAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
-            index.updatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
+            index.createdAt.Should().BeCloseTo(DateTimeOffset.Now, TolerableTimeDifference);
+            index.updatedAt.Should().BeCloseTo(DateTimeOffset.Now, TolerableTimeDifference);
         });
 
         [Fact]
@@ -62,8 +62,8 @@ namespace MeiliSearch
             index.uid.Should().Be(request.uid);
             index.name.Should().Be(request.uid);
             index.primaryKey.Should().NotBeNullOrWhiteSpace();
-            index.createdAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
-            index.updatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
+            index.createdAt.Should().BeCloseTo(DateTimeOffset.Now, TolerableTimeDifference);
+            index.updatedAt.Should().BeCloseTo(DateTimeOffset.Now, TolerableTimeDifference);
         });
 
         [Fact]
