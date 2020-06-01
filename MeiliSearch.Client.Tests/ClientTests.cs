@@ -2,7 +2,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using Xunit;
+using static MeiliSearch.TestUtils;
 
 namespace MeiliSearch
 {
@@ -15,51 +17,44 @@ namespace MeiliSearch
             primaryKey = "id"
         };
 
-        static Client2 CreateClient()
+        static Client CreateClient()
         {
-            return new Client2(new RawClient2(new Config("http://ko-ub.southeastasia.cloudapp.azure.com:7700/")));
+            return new Client(new RawClient(new Config("http://ko-ub.southeastasia.cloudapp.azure.com:7700/")));
+        }
+
+        static async Task RunInClean(Func<Client, Task> action)
+        {
+            var client = CreateClient();
+            await DeleteAllIndexes(client);
+            await action(client);
         }
 
         [Fact]
-        public async Task ListIndexes_Empty()
+        public Task ListIndexes_Empty() => RunInClean(async client =>
         {
-            await DeleteAllIndexes();
-
-            var client = CreateClient();
             (await client.ListIndexes()).Should().BeEmpty();
-        }
-
-        async Task DeleteAllIndexes()
-        {
-            var client = CreateClient();
-            foreach (var index in await client.ListIndexes())
-            {
-                await client.DeleteIndex(index.uid);
-            }
-        }
+        });
 
         [Fact]
-        public async Task ListIndexes_NoPrimaryKey()
+        public Task ListIndexes_NoPrimaryKey() => RunInClean(async client =>
         {
-            var client = CreateClient();
             var request = uidNoPrimaryKey;
 
             var createResponse = await client.CreateIndex(request);
-            createResponse.Single().uid.Should().Be(request.uid);
+            createResponse.uid.Should().Be(request.uid);
 
             var shown = await client.GetIndex(request.uid);
 
-            shown.Should().BeEquivalentTo(new { request.uid, name=request.uid, primaryKey=(string)null, createdAt=DateTimeOffset.Now }, options =>
-            {
-                options.Using<DateTimeOffset>(ctx => ctx.Subject.Should().BeCloseTo(ctx.Expectation, TimeSpan.FromSeconds(1))).WhenTypeIs<DateTimeOffset>();
-                return options;
-            });
+            shown.Should().BeEquivalentTo(new IndexResponse { uid = request.uid, name = request.uid, createdAt = DateTimeOffset.Now, updatedAt = DateTimeOffset.Now }, Tolerant);
 
             shown.uid.Should().Be(request.uid);
             shown.name.Should().Be(request.uid);
             shown.primaryKey.Should().Be(null);
             shown.createdAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
             shown.updatedAt.Should().BeCloseTo(DateTimeOffset.Now, TimeSpan.FromSeconds(1));
-        }
+        });
+
+        static EquivalencyAssertionOptions<TEx> Tolerant<TEx>(EquivalencyAssertionOptions<TEx> options) =>
+            options.Using<DateTimeOffset>(context => context.Subject.Should().BeCloseTo(context.Expectation, TimeSpan.FromSeconds(1))).WhenTypeIs<DateTimeOffset>();
     }
 }
